@@ -1,20 +1,33 @@
-// Source - https://stackoverflow.com/a/70926993
-// Posted by Franco
-// Retrieved 2026-04-05, License - CC BY-SA 4.0
-
 pipeline {
     agent any
 
     stages {
         stage('Build') {
             steps {
-                sh 'javac BubbleSort.java'
+                echo 'Building application...'
+                // Example: sh './gradlew build' or 'mvn clean install'
             }
         }
-        stage('Run') {
+        stage('Test') {
             steps {
-                sh 'java BubbleSort'
+                echo 'Running tests...'
+                // Example: sh './gradlew test'
             }
+        }
+    }
+
+    post {
+        success {
+            echo 'The build was successful!'
+            // Add actions here, such as:
+            // slackSend channel: '#deploy-alerts', message: "Build ${env.BUILD_NUMBER} passed."
+            // archiveArtifacts artifacts: 'target/*.jar', fingerprint: true
+        }
+        failure {
+            echo 'The build failed.'
+        }
+        always {
+            echo 'Cleaning up workspace...'
         }
     }
 }
